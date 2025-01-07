@@ -75,6 +75,16 @@ def number_to_chinese(number: str):
         chinese_str = "两" + chinese_str[1:]
     return chinese_str
 
+def time_to_chinese(match):
+    hour, minute = match.groups()
+    if minute == '00':
+        hour_chinese = f"{int(hour)}点" if hour != '00' else '零点'
+        return hour_chinese
+    else:
+        hour_chinese = f"{int(hour)}点" if hour != '00' else '零点'
+        minute_chinese = f"{minute}分"
+        return f"{hour_chinese}{minute_chinese}"
+
 
 def year_to_chinese(year: str):
     chinese_year = ""
@@ -90,6 +100,9 @@ def transcribe(text):
 
     regex_from_to = r'(\d+)\s*-\s*(\d+)'
     text = re.sub(regex_from_to, r'\1至\2', text)
+
+    regex_time = r'(\d{2}):([0-5][0-9])'
+    text = re.sub(regex_time, time_to_chinese, text)
 
     regex_num_unit = r"(\d+\.?\d*)\s*([A-Za-z/°²³%\+]+|[\u4e00-\u9fa5])"
     result = []
@@ -122,5 +135,5 @@ def transcribe(text):
 
 
 if __name__ == '__main__':
-    test_text = "鹿客2024款智能锁P7Pro，2023-2024范围，市占率99%，拥有142°超广角智能猫眼，1080P高清摄像头+纳米红外光夜视，500mah电池"
+    test_text = "鹿客2024款智能锁P7Pro，2023-2024范围，1月6日00:01 - 1月20日23:59，市占率99%，拥有142°超广角智能猫眼，1080P高清摄像头+纳米红外光夜视，500mah电池"
     print(transcribe(test_text))
