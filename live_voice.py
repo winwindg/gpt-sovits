@@ -6,9 +6,9 @@ import sys
 import time
 from typing import Generator
 
+import librosa
 import requests
 import uvicorn
-from scipy import signal
 
 import config
 import rewrite
@@ -172,18 +172,10 @@ def pack_raw(io_buffer: BytesIO, data: np.ndarray, rate: int):
 
 
 def pack_wav(io_buffer: BytesIO, data: np.ndarray, rate: int):
-    sf.write(io_buffer, data, rate, format='wav')
-    io_buffer.seek(0)
-
-    out_buffer = BytesIO()
-    re_data, _ = sf.read(io_buffer)
-    sf.write(out_buffer, re_data, default_sample_rate, format='wav')
-    return out_buffer
-
-
-def resample_audio(data: np.ndarray, orig_rate: int, target_rate: int) -> np.ndarray:
-    num_samples = round(len(data) * target_rate / orig_rate)
-    return signal.resample(data, num_samples)
+    if rate != default_sample_rate:
+        data = librosa.resample(y=data, orig_sr=rate, target_sr=default_sample_rate)
+    sf.write(io_buffer, data, default_sample_rate, format='wav')
+    return io_buffer
 
 
 def pack_aac(io_buffer: BytesIO, data: np.ndarray, rate: int):
