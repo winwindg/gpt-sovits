@@ -172,20 +172,13 @@ def pack_raw(io_buffer: BytesIO, data: np.ndarray, rate: int):
 
 
 def pack_wav(io_buffer: BytesIO, data: np.ndarray, rate: int):
-    # 将原始数据写入 BytesIO 缓冲区
-    sf.write(io_buffer, data, rate, format='wav')
-
-    # 检查是否需要重采样
     if rate != default_sample_rate:
-        io_buffer.seek(0)  # 重置读取指针
-        # 从缓冲区读取音频数据
-        audio_data, _ = sf.read(io_buffer)
-        # 使用 librosa 对数据进行重采样
-        resampled_data = librosa.resample(audio_data, orig_sr=rate, target_sr=default_sample_rate)
-        # 清空缓冲区并写入重采样后的数据
-        io_buffer.seek(0)
-        sf.write(io_buffer, resampled_data, default_sample_rate, format='wav')
+        data = librosa.resample(data, orig_sr=rate, target_sr=default_sample_rate)
 
+    # convert to int16 and scale to [-32767, 32767]
+    data = np.int16(data / np.max(np.abs(data)) * 32767)
+
+    sf.write(io_buffer, data, default_sample_rate, format='wav')
     return io_buffer
 
 
