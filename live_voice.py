@@ -172,10 +172,13 @@ def pack_raw(io_buffer: BytesIO, data: np.ndarray, rate: int):
 
 
 def pack_wav(io_buffer: BytesIO, data: np.ndarray, rate: int):
-    # io_buffer = BytesIO()
-    new_data = resample_audio(data, rate, default_sample_rate)
-    sf.write(io_buffer, new_data, default_sample_rate, format='wav')
-    return io_buffer
+    sf.write(io_buffer, data, rate, format='wav')
+    io_buffer.seek(0)
+
+    out_buffer = BytesIO()
+    re_data, _ = sf.read(io_buffer)
+    sf.write(out_buffer, re_data, default_sample_rate, format='wav')
+    return out_buffer
 
 
 def resample_audio(data: np.ndarray, orig_rate: int, target_rate: int) -> np.ndarray:
