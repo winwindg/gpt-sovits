@@ -172,9 +172,11 @@ def pack_raw(io_buffer: BytesIO, data: np.ndarray, rate: int):
 
 
 def pack_wav(io_buffer: BytesIO, data: np.ndarray, rate: int):
+    sf.write(io_buffer, data, rate, format='wav')
     if rate != default_sample_rate:
-        data = librosa.resample(y=data, orig_sr=rate, target_sr=default_sample_rate)
-    sf.write(io_buffer, data, default_sample_rate, format='wav')
+        io_buffer.seek(0)
+        data = librosa.resample(y=io_buffer.getvalue(), orig_sr=rate, target_sr=default_sample_rate)
+        sf.write(io_buffer, data, default_sample_rate, format='wav')
     return io_buffer
 
 
