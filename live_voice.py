@@ -178,6 +178,7 @@ def pack_wav(io_buffer: BytesIO, data: np.ndarray, rate: int):
         io_buffer.seek(0)
         audio_data, _ = sf.read(io_buffer)
         resampled_data = librosa.resample(audio_data, orig_sr=rate, target_sr=default_sample_rate)
+        io_buffer.seek(0)
         io_buffer.truncate(0)
         sf.write(io_buffer, resampled_data, default_sample_rate, format='wav')
 
