@@ -8,6 +8,7 @@ from typing import Generator
 
 import requests
 import uvicorn
+from scipy import signal
 
 import config
 import rewrite
@@ -172,8 +173,14 @@ def pack_raw(io_buffer: BytesIO, data: np.ndarray, rate: int):
 
 def pack_wav(io_buffer: BytesIO, data: np.ndarray, rate: int):
     # io_buffer = BytesIO()
-    sf.write(io_buffer, data, rate, format='wav')
+    new_data = resample_audio(data, rate, default_sample_rate)
+    sf.write(io_buffer, new_data, default_sample_rate, format='wav')
     return io_buffer
+
+
+def resample_audio(data: np.ndarray, orig_rate: int, target_rate: int) -> np.ndarray:
+    num_samples = round(len(data) * target_rate / orig_rate)
+    return signal.resample(data, num_samples)
 
 
 def pack_aac(io_buffer: BytesIO, data: np.ndarray, rate: int):
