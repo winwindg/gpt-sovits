@@ -29,7 +29,7 @@ mkdir -p output/denoise_opt
 mkdir -p output/slicer_opt
 mkdir -p output/uvr5_opt
 
-cp -rf /mnt/qnap/aigc/projects/gpt-sovits-v3/* .
+cp -rf /mnt/qnap/aigc/projects/gpt-sovits-v2/* .
 
 # modify config
 sed -i 's/is_share= True/is_share= False/' config.py
