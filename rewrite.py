@@ -113,7 +113,6 @@ def transcribe(text):
         unit = match.group(2)
 
         match_str = number + unit
-        print(match_str)
         if any(re.match(regex, match_str) for regex in ignore_dict):
             continue
 
