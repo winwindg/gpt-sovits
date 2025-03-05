@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 import shutil
 import sys
 import time
