@@ -291,7 +291,7 @@ async def tts_handle(req: dict):
             return Response(audio_data, media_type=f"audio/{media_type}")
     except Exception as e:
         logging.error(f"tts failed, {e}")
-        return JSONResponse(status_code=200, content={"code": 500, "msg": str(e)})
+        return JSONResponse(status_code=500, content={"code": 500, "msg": str(e)})
     finally:
         release_gpu_memory()
 
