@@ -76,6 +76,7 @@ def number_to_chinese(number: str):
         chinese_str = "两" + chinese_str[1:]
     return chinese_str
 
+
 def time_to_chinese(match):
     hour, minute = match.groups()
     if minute == '00':
@@ -105,7 +106,7 @@ def transcribe(text):
     regex_time = r'(\d{2}):([0-5][0-9])'
     text = re.sub(regex_time, time_to_chinese, text)
 
-    regex_num_unit = r"(\d+\.?\d*)\s*([A-Za-z/°²³%\+]+|[\u4e00-\u9fa5])"
+    regex_num_unit = r"(\d+\.?\d*)\s*([A-Za-z/℃°²³%\+]+|[\u4e00-\u9fa5])"
     result = []
 
     last_end = 0
