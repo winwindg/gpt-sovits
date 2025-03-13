@@ -66,13 +66,29 @@ ignore_dict = [
 
 replace_dict = {
     "+": "加",
+    # 温度单位
+    "℃": "摄氏度",
+    "℉": "华氏度",
+
+    # 面积单位
     "㎡": "平方米",
     "㎢": "平方公里",
     "㎠": "平方厘米",
+    "㎟": "平方毫米",
+
+    # 体积单位
     "㎥": "立方米",
     "㎣": "立方厘米",
-    '℃': '摄氏度',
-    '℉': '华氏度'
+    "㎤": "立方分米",
+    "㎦": "立方毫米",
+
+    # 长度单位
+    "㎜": "毫米",
+    "㎝": "厘米",
+    "㎞": "公里",
+    "㎎": "毫克",
+    "㎏": "千克",
+    "㎍": "微克",
 }
 
 
@@ -85,11 +101,11 @@ def number_to_chinese(number: str):
 
 def time_to_chinese(match):
     hour, minute = match.groups()
-    if minute == '00':
-        hour_chinese = f"{int(hour)}点" if hour != '00' else '零点'
+    if minute == "00":
+        hour_chinese = f"{int(hour)}点" if hour != "00" else "零点"
         return hour_chinese
     else:
-        hour_chinese = f"{int(hour)}点" if hour != '00' else '零点'
+        hour_chinese = f"{int(hour)}点" if hour != "00" else "零点"
         minute_chinese = f"{minute}分"
         return f"{hour_chinese}{minute_chinese}"
 
@@ -106,10 +122,10 @@ def transcribe(text):
     for k, v in replace_dict.items():
         text = text.replace(k, v)
 
-    regex_from_to = r'(\d+)\s*-\s*(\d+)'
-    text = re.sub(regex_from_to, r'\1至\2', text)
+    regex_from_to = r"(\d+)\s*-\s*(\d+)"
+    text = re.sub(regex_from_to, r"\1至\2", text)
 
-    regex_time = r'(\d{2}):([0-5][0-9])'
+    regex_time = r"(\d{2}):([0-5][0-9])"
     text = re.sub(regex_time, time_to_chinese, text)
 
     regex_num_unit = r"(\d+\.?\d*)\s*([A-Za-z/°²³%\+]+|[\u4e00-\u9fa5])"
@@ -138,9 +154,9 @@ def transcribe(text):
     # add the rest of the text to result list
     result.append(text[last_end:])
 
-    return ''.join(result)
+    return "".join(result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_text = "鹿客2024款智能锁P7Pro，2023-2024范围，1月6日00:01 - 1月20日23:59，市占率99%，拥有142°超广角智能猫眼，1080P高清摄像头+纳米红外光夜视，500mah电池"
     print(transcribe(test_text))
