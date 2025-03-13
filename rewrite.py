@@ -19,6 +19,7 @@ unit_dict = {
     # 面积单位
     "MM²": "平方毫米",
     "CM²": "平方厘米",
+    "㎡": "平方米",
     "M²": "平方米",
     "KM²": "平方千米",
 
@@ -106,7 +107,7 @@ def transcribe(text):
     regex_time = r'(\d{2}):([0-5][0-9])'
     text = re.sub(regex_time, time_to_chinese, text)
 
-    regex_num_unit = r"(\d+\.?\d*)\s*([A-Za-z/℃°²³%\+]+|[\u4e00-\u9fa5])"
+    regex_num_unit = r"(\d+\.?\d*)\s*([A-Za-z/℃°㎡²³%\+]+|[\u4e00-\u9fa5])"
     result = []
 
     last_end = 0
