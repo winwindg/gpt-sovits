@@ -89,6 +89,9 @@ replace_dict = {
     "㎎": "毫克",
     "㎏": "千克",
     "㎍": "微克",
+
+    # 大写替换
+    "WIFI": "wifi"
 }
 
 
@@ -120,7 +123,7 @@ def year_to_chinese(year: str):
 def transcribe(text):
     # replace characters in replace_dict
     for k, v in replace_dict.items():
-        text = text.replace(k, v)
+        text = re.sub(re.escape(k), v, text, flags=re.IGNORECASE)
 
     regex_from_to = r"(\d+)\s*-\s*(\d+)"
     text = re.sub(regex_from_to, r"\1至\2", text)
