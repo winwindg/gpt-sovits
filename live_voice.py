@@ -227,8 +227,9 @@ def release_gpu_memory():
         handle = pynvml.nvmlDeviceGetHandleByIndex(i)
         meminfo = pynvml.nvmlDeviceGetMemoryInfo(handle)
         usage_percent = meminfo.used / meminfo.total * 100
+        logging.warning(f"GPU {i} memory usage is {usage_percent:.2f}%")
         if usage_percent > 20:
-            logging.info(f"GPU {i} memory usage is {usage_percent:.2f}%. Release memory...")
+            logging.warning(f"GPU {i} memory usage is {usage_percent:.2f}%. Release memory...")
             torch.cuda.empty_cache()
         elif usage_percent > 30:
             logging.warning(f"GPU {i} memory usage is {usage_percent:.2f}%. Restart program...")
