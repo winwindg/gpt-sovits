@@ -1,7 +1,10 @@
 import json
 import logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 import os
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+
 import shutil
 import sys
 import time
@@ -227,13 +230,9 @@ def release_gpu_memory():
         handle = pynvml.nvmlDeviceGetHandleByIndex(i)
         meminfo = pynvml.nvmlDeviceGetMemoryInfo(handle)
         usage_percent = meminfo.used / meminfo.total * 100
-        logging.warning(f"GPU {i} memory usage is {usage_percent:.2f}%")
-        if usage_percent > 20:
-            logging.warning(f"GPU {i} memory usage is {usage_percent:.2f}%. Release memory...")
+        if usage_percent > 70:
+            logging.info(f"GPU {i} memory usage is {usage_percent:.2f}%. Release memory...")
             torch.cuda.empty_cache()
-        elif usage_percent > 30:
-            logging.warning(f"GPU {i} memory usage is {usage_percent:.2f}%. Restart program...")
-            os.execv(sys.executable, [sys.executable] + sys.argv)
 
 
 async def tts_handle(req: dict):
@@ -294,7 +293,7 @@ async def tts_handle(req: dict):
             audio_data = pack_audio(BytesIO(), audio_data, sr, media_type).getvalue()
             return Response(audio_data, media_type=f"audio/{media_type}")
     except Exception as e:
-        logging.error(f"tts failed, {e}")
+        logging.error("TTS error", e)
         return JSONResponse(status_code=500, content={"code": 500, "msg": str(e)})
     finally:
         release_gpu_memory()
