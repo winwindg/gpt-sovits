@@ -141,7 +141,7 @@ class TTS_Request(BaseModel):
     batch_threshold: float = 0.75
     split_bucket: bool = True
     speed_factor: float = 1.0
-    fragment_interval: float = 0.3
+    fragment_interval: float = 0.35
     seed: int = -1
     media_type: str = "wav"
     streaming_mode: bool = False
