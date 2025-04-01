@@ -22,7 +22,6 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 pip install --upgrade pip
 pip install /mnt/qnap/aigc/wheel/torch-2.1.1+cu118-cp39-cp39-linux_x86_64.whl
 pip install torchvision==0.16.1+cu118 torchaudio==2.1.1+cu118 --index-url https://download.pytorch.org/whl/cu118
-pip install -r requirements-extra.txt
 pip install -r requirements.txt
 
 mkdir -p input
