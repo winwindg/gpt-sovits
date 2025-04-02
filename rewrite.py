@@ -90,8 +90,8 @@ replace_dict = {
     "㎏": "千克",
     "㎍": "微克",
 
-    # 大写替换
-    "WIFI": "wifi"
+    # 小写转大写
+    "led": "LED",
 }
 
 
@@ -121,17 +121,24 @@ def year_to_chinese(year: str):
 
 
 def transcribe(text):
-    # replace characters in replace_dict
+    # 小写转大写
+    regex_words = r"\b[a-zA-Z]+\b"
+    text = re.sub(regex_words, lambda m: m.group(0).lower(), text)
+
+    # 字典替换
     for k, v in replace_dict.items():
         text = re.sub(re.escape(k), v, text, flags=re.IGNORECASE)
 
+    # 区间替换
     regex_from_to = r"(\d+)\s*-\s*(\d+)"
     text = re.sub(regex_from_to, r"\1至\2", text)
 
+    # 时间替换
     regex_time = r"(\d{2}):([0-5][0-9])"
     text = re.sub(regex_time, time_to_chinese, text)
 
-    regex_num_unit = r"(\d+\.?\d*)\s*([A-Za-z/°²³%\+]+|[\u4e00-\u9fa5])"
+    # 数字与单位替换
+    regex_num_unit = r"(\d+\.?\d*)\s*([A-Za-z/°²³%\+]+|[\u4e00-\u9fa5]|[,.，。、])"
     result = []
 
     last_end = 0
@@ -161,5 +168,5 @@ def transcribe(text):
 
 
 if __name__ == "__main__":
-    test_text = "鹿客2024款智能锁P7Pro，2023-2024范围，1月6日00:01 - 1月20日23:59，市占率99%，拥有142°超广角智能猫眼，1080P高清摄像头+纳米红外光夜视，500mah电池"
+    test_text = "Nvidia rtx 3060显卡是一个性价比很高的显卡，LED配备了usb阵列卡升级功能，再加上H330、H750这样的高端raid控制器加持，简直就是数据界的“保险箱”。就算你的业务量突然暴涨，cpu也能稳如泰山，绝不掉链子。"
     print(transcribe(test_text))
