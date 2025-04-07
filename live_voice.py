@@ -61,12 +61,8 @@ def create_config(t2s_weights_path, vits_weights_path):
 
 
 def get_tts_pipeline(speaker_name: str):
-    global tts_pipelines
-    if speaker_name not in tts_pipelines:
-        tts_config = create_config(get_speaker_file(speaker_name, "model.ckpt"), get_speaker_file(speaker_name, "model.pth"))
-        tts_pipelines[speaker_name] = TTS(tts_config)
-
-    return tts_pipelines[speaker_name]
+    tts_config = create_config(get_speaker_file(speaker_name, "model.ckpt"), get_speaker_file(speaker_name, "model.pth"))
+    return TTS(tts_config)
 
 
 def get_speaker_meta(speaker_name: str):
