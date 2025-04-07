@@ -11,10 +11,8 @@ import time
 from typing import Generator
 
 import librosa
-import pynvml
 import requests
 import uvicorn
-import torch
 
 import config
 import rewrite
@@ -218,19 +216,6 @@ def pack_audio(io_buffer: BytesIO, data: np.ndarray, rate: int, media_type: str)
     return io_buffer
 
 
-def release_gpu_memory():
-    pynvml.nvmlInit()
-    gpu_count = pynvml.nvmlDeviceGetCount()
-
-    for i in range(gpu_count):
-        handle = pynvml.nvmlDeviceGetHandleByIndex(i)
-        meminfo = pynvml.nvmlDeviceGetMemoryInfo(handle)
-        usage_percent = meminfo.used / meminfo.total * 100
-        if usage_percent > 70:
-            logging.info(f"GPU {i} memory usage is {usage_percent:.2f}%. Release memory...")
-            torch.cuda.empty_cache()
-
-
 async def tts_handle(req: dict):
     """
     Text to speech handler.
@@ -291,8 +276,6 @@ async def tts_handle(req: dict):
     except Exception as e:
         logging.error("TTS error", e)
         return JSONResponse(status_code=500, content={"code": 500, "msg": str(e)})
-    finally:
-        release_gpu_memory()
 
 
 @app.post("/tts")

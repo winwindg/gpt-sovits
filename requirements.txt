@@ -40,4 +40,3 @@ x_transformers
 torchmetrics<=1.5
 pydantic==2.10.6
 attrdict
-pynvml
