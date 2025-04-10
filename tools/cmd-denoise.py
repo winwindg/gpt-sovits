@@ -33,7 +33,7 @@ def match_loudness(audio_file):
     _loudness = meter.integrated_loudness(peak_audio)
     norm_audio = pyln.normalize.loudness(peak_audio, _loudness, -23.0)
 
-    # Save the normalized audio back to the target file (overwrite)
+    # Save the normalized audio back to the audio file (overwrite)
     sf.write(audio_file, norm_audio, rate)
 
 
